@@ -8,8 +8,10 @@ type stack struct {
 	sync.RWMutex
 }
 
-func NewStack() *stack {
-	return new(stack)
+func NewStack(vs ...interface{}) *stack {
+	st := new(stack)
+	st.Push(vs...)
+	return st
 }
 
 func (st *stack) Push(vs ...interface{}) {
