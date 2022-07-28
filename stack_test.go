@@ -82,3 +82,22 @@ func TestStack_Length(t *testing.T) {
 		)
 	}
 }
+
+func TestStack_Copy(t *testing.T) {
+	var (
+		st1 = NewStack()
+		st2 = NewStack()
+	)
+	st1.Push(3, 1, 2)
+	st2 = st1.Copy()
+
+	if st1.Length() != st2.Length() {
+		t.Errorf("st2 must have the same length as st1")
+	}
+	for !st1.IsEmpty() {
+		a, b := st1.Pop(), st2.Pop()
+		if a != b {
+			t.Errorf("different result: %v != %v", a, b)
+		}
+	}
+}
