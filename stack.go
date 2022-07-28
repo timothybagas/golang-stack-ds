@@ -2,13 +2,23 @@ package stack
 
 import "sync"
 
+type Stack interface {
+	Push(vs ...interface{})
+	Pop() interface{}
+	Peek() interface{}
+	Length() int
+	Clear()
+	IsEmpty() bool
+	Copy() Stack
+}
+
 type stack struct {
 	head   *node
 	length int
 	sync.RWMutex
 }
 
-func NewStack(vs ...interface{}) *stack {
+func NewStack(vs ...interface{}) Stack {
 	st := new(stack)
 	st.Push(vs...)
 	return st
@@ -71,7 +81,7 @@ func (st *stack) IsEmpty() bool {
 	return st.head == nil && st.length == 0
 }
 
-func (st *stack) Copy() *stack {
+func (st *stack) Copy() Stack {
 	st.RLock()
 	defer st.RUnlock()
 
