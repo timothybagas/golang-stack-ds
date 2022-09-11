@@ -2,29 +2,19 @@ package stack
 
 import "sync"
 
-type Stack interface {
-	Push(vs ...interface{})
-	Pop() interface{}
-	Peek() interface{}
-	Length() int
-	Clear()
-	IsEmpty() bool
-	Copy() Stack
-}
-
-type stack struct {
+type Stack struct {
 	head   *node
 	length int
 	sync.RWMutex
 }
 
-func NewStack(vs ...interface{}) Stack {
-	st := new(stack)
+func NewStack(vs ...interface{}) *Stack {
+	st := new(Stack)
 	st.Push(vs...)
 	return st
 }
 
-func (st *stack) Push(vs ...interface{}) {
+func (st *Stack) Push(vs ...interface{}) {
 	st.Lock()
 	defer st.Unlock()
 
@@ -38,7 +28,7 @@ func (st *stack) Push(vs ...interface{}) {
 	}
 }
 
-func (st *stack) Pop() interface{} {
+func (st *Stack) Pop() interface{} {
 	st.Lock()
 	defer st.Unlock()
 
@@ -52,36 +42,36 @@ func (st *stack) Pop() interface{} {
 	return val
 }
 
-func (st *stack) Peek() interface{} {
+func (st *Stack) Peek() interface{} {
 	st.RLock()
 	defer st.RUnlock()
 
 	if st.head == nil {
-		return nil
+		panic("trying to pop from empty stack")
 	}
 	return st.head.val
 }
 
-func (st *stack) Length() int {
+func (st *Stack) Length() int {
 	st.RLock()
 	defer st.RUnlock()
 	return st.length
 }
 
-func (st *stack) Clear() {
+func (st *Stack) Clear() {
 	st.Lock()
 	defer st.Unlock()
 	st.head = nil
 	st.length = 0
 }
 
-func (st *stack) IsEmpty() bool {
+func (st *Stack) IsEmpty() bool {
 	st.RLock()
 	defer st.RUnlock()
 	return st.head == nil && st.length == 0
 }
 
-func (st *stack) Copy() Stack {
+func (st *Stack) Copy() *Stack {
 	st.RLock()
 	defer st.RUnlock()
 
